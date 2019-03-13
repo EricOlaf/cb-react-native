@@ -2,10 +2,15 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default class App extends React.Component {
+  state = {
+    repos: [],
+    userInput: "",
+    moreInfo: ""
+  };
   render() {
     return (
       <View style={styles.container}>
-        <Text>Yep</Text>
+        <Text>Start</Text>
       </View>
     );
   }
