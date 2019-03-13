@@ -1,16 +1,34 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export default class App extends React.Component {
+import Header from "./components/Header";
+import RepoList from "./components/RepoList";
+import Search from "./components/Search";
+import RepoMoreInfo from "./components/RepoMoreInfo";
+
+class App extends React.Component {
   state = {
     repos: [],
     userInput: "",
-    moreInfo: ""
+    moreInfo: "",
+    loading: false,
+    err: ""
   };
+
+  searchUser = name => {
+    this.setState({ loading: true });
+    fetch(`https://api.github.com/users/${name}/repos`).then(response => {
+      this.setState({ repos: response });
+    });
+  };
+
   render() {
     return (
       <View style={styles.container}>
-        <Text>Start</Text>
+        <Header />
+        <Search searchUser={this.searchUser} />
+        <RepoList repos={this.state.repos} />
+        <RepoMoreInfo />
       </View>
     );
   }
@@ -24,3 +42,5 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   }
 });
+
+export default App;
