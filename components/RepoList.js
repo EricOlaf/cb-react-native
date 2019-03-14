@@ -1,11 +1,15 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, FlatList } from "react-native";
 
 const RepoList = props => {
+
+    _renderItem = ({item}) => {
+        
+    }
   return (
-    <View style={styles.container}>
-      <Text>My RepoList</Text>
-    </View>
+    <FlatList
+    
+    />
   );
 };
 
