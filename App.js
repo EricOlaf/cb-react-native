@@ -1,10 +1,10 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 
 import Header from "./components/Header";
 import RepoList from "./components/RepoList";
 import Search from "./components/Search";
-// import RepoMoreInfo from "./components/RepoMoreInfo";
+import RepoMoreInfo from "./components/RepoMoreInfo";
 
 class App extends React.Component {
   state = {
@@ -12,32 +12,52 @@ class App extends React.Component {
     userInput: "",
     moreInfo: "",
     loading: false,
-    err: ""
+    err: null,
+    info: false,
+    user: "",
+    repoName: "",
+    showMore: false
   };
 
   searchUser = name => {
     let goodRepos = [];
     this.setState({ loading: true });
-    fetch(`https://api.github.com/users/${name}/repos`)
-      .then(response => {
-        console.log(response.json());
+    fetch(
+      `https://api.github.com/users/${name}/repos?fork=false&sort=stars&order=desc`
+    )
+      .then(response => response.json())
+      .then(data => {
+        data.sort(function(a, b) {
+          return b.stargazers_count - a.stargazers_count;
+        });
+
+        this.setState({ repos: data, loading: false, info: true });
       })
-      // .then(data => {
-      //   console.log(data);
-      // })
       .catch(error => {
-        this.setState({ err: error });
+        console.log(error);
+        this.setState({ err: error, loading: false });
       });
   };
 
+  openMoreInfo = (repoName, user) => {
+    this.setState({ user, repoName, showMore: true });
+  };
+
   render() {
-    // const { repos } = this.state;
+    const { repos, loading, info, err, user, repoName, showMore } = this.state;
     // console.log(repos);
+
     return (
       <View style={styles.container}>
-        <Header />
+        <Header repos={repos} info={info} />
         <Search searchUser={this.searchUser} />
-        <RepoList repos={this.state.repos} />
+        <RepoList
+          repos={repos}
+          loading={loading}
+          err={err}
+          openMoreInfo={this.openMoreInfo}
+        />
+        <RepoMoreInfo user={user} repoName={repoName} showMore={showMore} />
       </View>
     );
   }

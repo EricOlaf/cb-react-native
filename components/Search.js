@@ -28,8 +28,9 @@ class Search extends Component {
         />
         <Button
           title="SEARCH"
-          onPress={() => {
-            this.props.searchUser(this.state.userText);
+          onPress={async () => {
+            await this.props.searchUser(this.state.userText);
+            this.setState({ userText: "" });
           }}
         />
       </View>
