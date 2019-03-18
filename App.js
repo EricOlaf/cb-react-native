@@ -17,7 +17,7 @@ class App extends React.Component {
     user: "",
     repoName: "",
     showMore: false,
-    repo: {}
+    repo: []
   };
 
   searchUser = name => {
@@ -28,6 +28,7 @@ class App extends React.Component {
     )
       .then(response => response.json())
       .then(data => {
+        // console.log("CORRECT DATA:", data);
         data.sort(function(a, b) {
           return b.stargazers_count - a.stargazers_count;
         });
@@ -40,18 +41,19 @@ class App extends React.Component {
       });
   };
 
-  openMoreInfo = (rN, u) => {
+  openMoreInfo = rN => {
     this.setState({ loading: true });
-    fetch(`https://api.github.com/repos/${u}/${rN}/readme`)
+    fetch(`https://api.github.com/repos/${rN}/readme`)
       .then(response => response.json())
       .then(data => {
-        console.log("DATA:", data);
-        this.setState({ repo: data });
+        let newD = data.content;
+        console.log("CONTENT==> ", newD);
+        this.setState({ repo: data.content.atob() });
       })
       .catch(error => {
         console.log(error);
       });
-    this.setState({ showMore: true });
+    this.setState({ showMore: true, loading: false });
   };
 
   render() {
@@ -69,15 +71,20 @@ class App extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Header repos={repos} info={info} />
-        <Search searchUser={this.searchUser} />
-        <RepoList
-          repos={repos}
-          loading={loading}
-          err={err}
-          openMoreInfo={this.openMoreInfo}
-        />
-        <RepoMoreInfo repo={repo} showMore={showMore} />
+        {showMore ? (
+          <RepoMoreInfo repo={repo} showMore={showMore} />
+        ) : (
+          <View>
+            <Header repos={repos} info={info} />
+            <Search searchUser={this.searchUser} />
+            <RepoList
+              repos={repos}
+              loading={loading}
+              err={err}
+              openMoreInfo={this.openMoreInfo}
+            />
+          </View>
+        )}
       </View>
     );
   }

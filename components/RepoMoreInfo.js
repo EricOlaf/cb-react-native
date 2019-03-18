@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Dimensions, ScrollView } from "react-native";
 
 const RepoMoreInfo = props => {
   // componentDidMount(props) {
@@ -18,11 +18,9 @@ const RepoMoreInfo = props => {
   // }
 
   return (
-    <View>
-      {props.showMore ? (
-        <Text style={styles.container}>{props.repo.content}</Text>
-      ) : null}
-    </View>
+    <ScrollView style={styles.container}>
+      <Text>{props.repo}</Text>
+    </ScrollView>
   );
 };
 
@@ -31,9 +29,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: width,
-    backgroundColor: "red",
+    height: height,
+    backgroundColor: "orange",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    paddingTop: 40
   }
 });
 

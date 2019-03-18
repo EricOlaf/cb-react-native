@@ -17,7 +17,7 @@ const RepoList = props => {
       <View style={styles.repoCard} key={r.id}>
         <TouchableHighlight
           onPress={() => {
-            props.openMoreInfo(r.name, r.owner.login);
+            props.openMoreInfo(r.full_name);
           }}
         >
           <Text>{r.name}</Text>
