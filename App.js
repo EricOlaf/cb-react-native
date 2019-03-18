@@ -16,7 +16,8 @@ class App extends React.Component {
     info: false,
     user: "",
     repoName: "",
-    showMore: false
+    showMore: false,
+    repo: {}
   };
 
   searchUser = name => {
@@ -39,12 +40,31 @@ class App extends React.Component {
       });
   };
 
-  openMoreInfo = (repoName, user) => {
-    this.setState({ user, repoName, showMore: true });
+  openMoreInfo = (rN, u) => {
+    this.setState({ loading: true });
+    fetch(`https://api.github.com/repos/${u}/${rN}/readme`)
+      .then(response => response.json())
+      .then(data => {
+        console.log("DATA:", data);
+        this.setState({ repo: data });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    this.setState({ showMore: true });
   };
 
   render() {
-    const { repos, loading, info, err, user, repoName, showMore } = this.state;
+    const {
+      repos,
+      loading,
+      info,
+      err,
+      user,
+      repoName,
+      showMore,
+      repo
+    } = this.state;
     // console.log(repos);
 
     return (
@@ -57,7 +77,7 @@ class App extends React.Component {
           err={err}
           openMoreInfo={this.openMoreInfo}
         />
-        <RepoMoreInfo user={user} repoName={repoName} showMore={showMore} />
+        <RepoMoreInfo repo={repo} showMore={showMore} />
       </View>
     );
   }
